@@ -1,14 +1,50 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useState } from "react";
 
 export const CartPage = () => {
     const {cart, removeFromCart, totalPrice, clearCart} = useCart()
     const navigate = useNavigate()
+    const [isBuying, setIsBuying] = useState(false)
 
-    const handleCheckout = () => {
-        alert("Pedido realizado con éxito")
-        clearCart()
-        navigate("/products")
+    const handleCheckout = async () => {
+        const token = localStorage.getItem("token")
+        if (!token){
+            alert("Necesitas iniciar sesión para realizar el pedido")
+            navigate("/login")
+            return
+        }
+        setIsBuying(true)
+        try {
+            const baseUrl = import.meta.env.VITE_BACKEND_URL 
+            const orderPayload = {
+                products: cart.map((item) => ({
+                    product: item._id,
+                    quantity: item.quantity,
+                    price: item.precio
+                })),
+                total: totalPrice
+            }
+            const response = await fetch(`${baseUrl}/pedidos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(orderPayload)
+            })
+            const data = response.json()
+            if(!response.ok){
+                throw new Error(data.error)
+            }
+            alert("Pedido realizado!")
+            clearCart()
+            navigate("/products")
+        } catch (error) {
+            console.error(error)
+            alert("No autorizado")
+            setIsBuying(false)
+        }
     }
     if (cart.length === 0) {
         return (
@@ -44,7 +80,7 @@ export const CartPage = () => {
                     <div className="total-amount">
                         {totalPrice.toFixed(2)} €
                     </div>
-                    <button onClick={handleCheckout} className="btn-checkout">Finalizar compra</button>
+                    <button onClick={handleCheckout} className="btn-checkout" disabled={isBuying}>{isBuying ? "Procesando" : "Finalizar compra"}</button>
                     <button onClick={clearCart}>Vaciar carrito</button>
                 </div>
 

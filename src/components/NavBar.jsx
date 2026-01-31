@@ -10,6 +10,7 @@ export const NavBar = () => {
             </div>
             <div className="navbar-links">
                 <Link to={"/products"}>Productos</Link>
+                <Link to={"/orders"}>Mis pedidos</Link>
                 <Link to={"/cart"} className="cart-icon">🛒 {totalItems > 0 && (<span className="cart-badge">{totalItems}</span>)}</Link>
             </div>
         </nav>

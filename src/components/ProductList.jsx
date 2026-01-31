@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFetch} from "../hooks/useFetch"
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
@@ -6,6 +6,8 @@ import { useCart } from '../context/CartContext'
 const ProductList = () => {
     const {data: products, loading, error} = useFetch("/products")
     const {addToCart} = useCart()
+    const [searchTerm, setSearchTerm] = useState("")
+
     if (loading) return <p>Cargando productos</p>
     if (error) {
         return (
@@ -19,10 +21,30 @@ const ProductList = () => {
         )
     }
 
+    const filteredProducts = products ? products.filter((product) => {
+        const term = searchTerm.toLowerCase()
+        const name = product.nombre.toLowerCase()
+        const category = product.categoria.toLowerCase()
+        return name.includes(term) || category.includes(term)
+    }) : []
+
   return (
+    <div className='product-list-container'>
+    <div className='search container'>
+        <input 
+            type="text"
+            placeholder='Busca por nombre o categoria'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} className='search-input' />
+    </div>
+    {products && filteredProducts.length === 0 && (
+        <div className='empty-results'>
+            <p>No encontrado</p>
+        </div>
+    )}
     <div className='product-grid'>
         
-        {products && products.map((product) => (
+        {filteredProducts.map((product) => (
             <article key={product._id} className='product-card'>
                 <div className='image-container'>
                     <img src={product.img} alt={product.nombre} className='product-img' />
@@ -38,6 +60,7 @@ const ProductList = () => {
 
             </article>
         ))}
+    </div>
     </div>
   )
 }
