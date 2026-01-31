@@ -7,6 +7,8 @@ import Register from './components/Register'
 import { NavBar } from './components/NavBar'
 import { CartPage } from './pages/CartPage'
 import { OrdersPage } from './pages/OrdersPage'
+import { ProductForm } from './components/ProductForm'
+import Footer from './components/Footer'
 
 function App() {
   
@@ -21,7 +23,10 @@ function App() {
         <Route path='/products' element={<ProductsPage/>}/>
         <Route path='/cart' element={<CartPage/>}/>
         <Route path='/orders' element={<OrdersPage/>}/>
+        <Route path='/create-product' element={<ProductForm/>}/>
+        <Route path='/edit-product/:id' element={<ProductForm/>}/>
       </Routes>
+      <Footer/>
     </BrowserRouter>
   )
 }

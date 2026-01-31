@@ -24,8 +24,9 @@ const Login = () => {
                 throw new Error(data.error)
             }
             localStorage.setItem("token", data.token)
+            localStorage.setItem("user", JSON.stringify(data.user))
             console.log("Login exitoso", data);
-            navigate("/products")
+            window.location.href = "/products"
             
         } catch (error) {
             setError(error.message)

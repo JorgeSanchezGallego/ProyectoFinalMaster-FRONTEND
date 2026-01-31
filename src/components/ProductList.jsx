@@ -1,12 +1,39 @@
 import React, { useState } from 'react'
 import { useFetch} from "../hooks/useFetch"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 
 const ProductList = () => {
     const {data: products, loading, error} = useFetch("/products")
     const {addToCart} = useCart()
     const [searchTerm, setSearchTerm] = useState("")
+    const navigate = useNavigate()
+
+    const user = JSON.parse(localStorage.getItem("user"))
+    const isSupplier = user.role === "comercial"
+    const isManager = user.role ==="encargado"
+
+    const handleDelete = async (id) => {
+        const token = localStorage.getItem("token")
+        const baseUrl = import.meta.env.VITE_BACKEND_URL
+
+        try {
+            const response = await fetch(`${baseUrl}/products/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            if (response.ok) {
+                alert("Producto eliminado")
+                window.location.reload()
+            } else {
+                alert("Error al borrar")
+            }
+        } catch (error) {
+            console.error("Error en la conexión")
+        }
+    }
 
     if (loading) return <p>Cargando productos</p>
     if (error) {
@@ -37,6 +64,15 @@ const ProductList = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)} className='search-input' />
     </div>
+
+    {isSupplier && (
+        <button
+            className='btn-create'
+            onClick={() => navigate("/create-product")}>
+                Subir producto
+            </button>
+    )}
+
     {products && filteredProducts.length === 0 && (
         <div className='empty-results'>
             <p>No encontrado</p>
@@ -54,7 +90,24 @@ const ProductList = () => {
                     <p className='product-category'>{product.categoria}</p>
                     <div className='card-footer'>
                         <span className='product-price'>{product.precio}€</span>
-                        <button className='add-btn' onClick={() => addToCart(product)}>Añadir</button>
+                        {isManager && (
+                        <button 
+                            className='add-btn' 
+                            onClick={() => addToCart(product)}>Añadir</button>)}
+                        {isSupplier && (
+                            <button
+                                className='update-btn'
+                                onClick={() => navigate(`/edit-product/${product._id}`)}>
+                                    Editar producto
+                            </button>
+                        )}
+                        {isSupplier && (
+                            <button
+                                className='delete-btn'
+                                onClick={() => handleDelete(product._id)}>
+                                    Borrar producto
+                            </button>
+                        )}
                     </div>
                 </div>
 
