@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
+import { toast } from "sonner"
 
 export const ProductForm = () => {
     const {register, handleSubmit, formState: {errors}} = useForm()
@@ -38,10 +39,11 @@ export const ProductForm = () => {
             if (!response.ok) {
                 throw new Error("Error al crear el producto")
             }
-            alert(isEditing ? "Producto actualizado con éxito" : "Producto creado con éxito")
+            toast.success(isEditing ? "Producto actualizado con éxito" : "Producto creado con éxito")
             navigate("/products")
         } catch (error) {
             setServerError(error.message)
+            toast.error("Error al guardar:" + error.message)
         }
     }
     return (

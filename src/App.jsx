@@ -9,12 +9,14 @@ import { CartPage } from './pages/CartPage'
 import { OrdersPage } from './pages/OrdersPage'
 import { ProductForm } from './components/ProductForm'
 import Footer from './components/Footer'
+import { Toaster } from 'sonner'
 
 function App() {
   
 
   return (
     <BrowserRouter>
+      <Toaster position="top-center" richColors />
       <NavBar/>
       <Routes>
         <Route path='/' element={<Home/>} />

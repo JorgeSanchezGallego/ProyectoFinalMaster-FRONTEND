@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -25,8 +26,8 @@ const Login = () => {
             }
             localStorage.setItem("token", data.token)
             localStorage.setItem("user", JSON.stringify(data.user))
-            console.log("Login exitoso", data);
-            window.location.href = "/products"
+            toast.success("Bienvenido de nuevo "+ data.user.nombre);
+            setTimeout(() => {window.location.href = "/products"}, 1500)
             
         } catch (error) {
             setError(error.message)

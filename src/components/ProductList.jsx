@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useFetch} from "../hooks/useFetch"
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { toast } from 'sonner'
+import { set } from 'react-hook-form'
 
 const ProductList = () => {
     const {data: products, loading, error} = useFetch("/products")
@@ -25,10 +27,10 @@ const ProductList = () => {
                 }
             })
             if (response.ok) {
-                alert("Producto eliminado")
-                window.location.reload()
+                toast.success("Producto eliminado")
+                setTimeout(() => window.location.reload(), 1500 )
             } else {
-                alert("Error al borrar")
+                toast.error("Error al borrar")
             }
         } catch (error) {
             console.error("Error en la conexión")
@@ -93,7 +95,7 @@ const ProductList = () => {
                         {isManager && (
                         <button 
                             className='add-btn' 
-                            onClick={() => addToCart(product)}>Añadir</button>)}
+                            onClick={() => {addToCart(product); toast.success(`Añadido al carrito: ${product.nombre}`)}}>Añadir</button>)}
                         {isSupplier && (
                             <button
                                 className='update-btn'

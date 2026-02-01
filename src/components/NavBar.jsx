@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { useCart } from "../context/CartContext"
 import brandImg from '../assets/logo-transparent.png'
+import { toast } from "sonner"
 
 export const NavBar = () => {
     const {totalItems} =useCart()
@@ -25,7 +26,8 @@ const isLogged = !!user.email
                     className="btn-logout"
                         onClick={() => {
                             localStorage.clear() 
-                            window.location.href = "/"
+                            toast.success(`Hasta pronto ${user.nombre}!`)
+                            setTimeout(() => {window.location.href = "/"}, 1000)
                         }} >Salir</button>
                 )}
             </div>

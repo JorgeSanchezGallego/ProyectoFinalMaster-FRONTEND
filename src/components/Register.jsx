@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { set, useForm } from 'react-hook-form'
 import {  useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const Register = () => {
     const { register, handleSubmit, formState: {errors}} = useForm()
@@ -22,6 +23,7 @@ const Register = () => {
                 throw new Error(json.error)
             }
             console.log("Usuario registrado", json);
+            toast.success("Cuenta creada con éxito, ahora inicia sesión!")
             navigate("/login")
             
         } catch (error) {

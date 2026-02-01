@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export const CartPage = () => {
     const {cart, removeFromCart, totalPrice, clearCart} = useCart()
@@ -10,7 +11,7 @@ export const CartPage = () => {
     const handleCheckout = async () => {
         const token = localStorage.getItem("token")
         if (!token){
-            alert("Necesitas iniciar sesión para realizar el pedido")
+            toast.error("Necesitas iniciar sesión para realizar el pedido")
             navigate("/login")
             return
         }
@@ -37,12 +38,12 @@ export const CartPage = () => {
             if(!response.ok){
                 throw new Error(data.error)
             }
-            alert("Pedido realizado!")
+            toast.success("Pedido realizado!")
             clearCart()
             navigate("/products")
         } catch (error) {
             console.error(error)
-            alert("No autorizado")
+            toast.error("No autorizado")
             setIsBuying(false)
         }
     }
@@ -67,7 +68,7 @@ export const CartPage = () => {
                             </div>
                             <div className="item-actions">
                                 <span className="quantity-badge">x {product.quantity}</span>
-                                <button onClick={() => removeFromCart(product._id)} className="btn-remove">Eliminar</button>
+                                <button onClick={() => {removeFromCart(product._id); toast.success("Producto eliminado")}} className="btn-remove">Eliminar</button>
                             </div>
                             <div className="item-total-price">
                                 {(product.precio * product.quantity).toFixed(2)} €
@@ -81,7 +82,7 @@ export const CartPage = () => {
                         {totalPrice.toFixed(2)} €
                     </div>
                     <button onClick={handleCheckout} className="btn-checkout" disabled={isBuying}>{isBuying ? "Procesando" : "Finalizar compra"}</button>
-                    <button onClick={clearCart}>Vaciar carrito</button>
+                    <button onClick={() => {clearCart(); toast.success("Carrito vaciado")}}>Vaciar carrito</button>
                 </div>
 
             </div>
