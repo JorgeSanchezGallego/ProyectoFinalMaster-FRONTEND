@@ -3,6 +3,7 @@ import { useCart } from "../context/CartContext"
 import brandImg from '../assets/logo-transparent.png'
 import { toast } from "sonner"
 
+
 export const NavBar = () => {
     const {totalItems} =useCart()
     const user = JSON.parse(localStorage.getItem("user")) || {}
