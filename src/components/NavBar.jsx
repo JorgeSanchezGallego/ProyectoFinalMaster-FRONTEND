@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useCart } from "../context/CartContext"
 import brandImg from '../assets/logo.png'
 import { toast } from "sonner"
@@ -8,6 +8,7 @@ export const NavBar = () => {
     const {totalItems} =useCart()
     const user = JSON.parse(localStorage.getItem("user")) || {}
     const isManager = user.role === "encargado"
+    const navigate = useNavigate()
 
 const isLogged = !!user.email
     return (
@@ -31,7 +32,7 @@ const isLogged = !!user.email
                         onClick={() => {
                             localStorage.clear() 
                             toast.success(`Hasta pronto ${user.nombre}!`)
-                            setTimeout(() => {window.location.href = "/"}, 1000)
+                            setTimeout(() => {navigate("/")}, 1000)
                         }} >Salir</button>
                 )}
             </div>
