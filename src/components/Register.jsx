@@ -20,7 +20,8 @@ const Register = () => {
             }) 
             const json = await response.json()
             if (!response.ok){
-                throw new Error(json.error)
+                const message = typeof json === 'string' ? json : json.error || "Error al registrarse"
+                throw new Error(message)
             }
             console.log("Usuario registrado", json);
             toast.success("Cuenta creada con éxito, ahora inicia sesión!")
