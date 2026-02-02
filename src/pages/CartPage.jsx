@@ -3,22 +3,38 @@ import { useCart } from "../context/CartContext";
 import { useState } from "react";
 import { toast } from "sonner";
 
+/**
+ * Componente que representa la página del carrito de compras.
+ * * Funcionalidades:
+ * - Visualización detallada de los productos añadidos.
+ * - Gestión de cantidades y eliminación de artículos.
+ * - Cálculo de subtotales y total general.
+ * - Finalización de compra (Checkout) con envío de datos al backend.
+ * - Protección de ruta: redirige al login si no hay token al intentar comprar.
+ * * @component
+ * @returns {JSX.Element} Vista del resumen de compra y pasarela de pedido.
+ */
 export const CartPage = () => {
-    const {cart, removeFromCart, totalPrice, clearCart} = useCart()
-    const navigate = useNavigate()
-    const [isBuying, setIsBuying] = useState(false)
+    const {cart, removeFromCart, totalPrice, clearCart} = useCart() //Extraemos funciones necesarias del contexto global
+    const navigate = useNavigate()//Redirecciones
+    const [isBuying, setIsBuying] = useState(false)//Estado para comprobar el loading del boton de compra
 
+    /**
+     * Procesa la orden de compra enviándola a la API.
+     * Realiza validaciones de seguridad y formatea los datos para el backend.
+     * @async
+     */
     const handleCheckout = async () => {
-        const token = localStorage.getItem("token")
-        if (!token){
+        const token = localStorage.getItem("token")//Recuperamos el token
+        if (!token){//Verificamos si estamos logueados
             toast.error("Necesitas iniciar sesión para realizar el pedido")
             navigate("/login")
             return
         }
-        setIsBuying(true)
+        setIsBuying(true)//Confirmamos estado
         try {
-            const baseUrl = import.meta.env.VITE_BACKEND_URL 
-            const orderPayload = {
+            const baseUrl = import.meta.env.VITE_BACKEND_URL //Construimos la base de la url
+            const orderPayload = { //Mapeo de datos: Transformamos el carrito al formato que espera el modelo Order de Mongoose
                 products: cart.map((item) => ({
                     product: item._id,
                     quantity: item.quantity,
@@ -26,20 +42,20 @@ export const CartPage = () => {
                 })),
                 total: totalPrice
             }
-            const response = await fetch(`${baseUrl}/pedidos`, {
-                method: "POST",
+            const response = await fetch(`${baseUrl}/pedidos`, {//Montamos url final
+                method: "POST",//Metodo post
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json",//Sera json y mostramos autorizacion
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(orderPayload)
+                body: JSON.stringify(orderPayload)//Pasamos a texto el JSON
             })
-            const data = response.json()
+            const data = response.json()//Pasamos a objeto JS
             if(!response.ok){
                 throw new Error(data.error)
             }
             toast.success("Pedido realizado!")
-            clearCart()
+            clearCart()//Limpiamos el carrito si se ha efectuado la compra
             navigate("/products")
         } catch (error) {
             console.error(error)
@@ -47,7 +63,7 @@ export const CartPage = () => {
             setIsBuying(false)
         }
     }
-    if (cart.length === 0) {
+    if (cart.length === 0) {//Mensaje si el carrito esta vacio
         return (
             <div className="cart-empty-container">
                 <h2>Tu carrito está vacio</h2>

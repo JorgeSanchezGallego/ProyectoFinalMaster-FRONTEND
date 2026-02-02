@@ -2,6 +2,17 @@ import React from 'react'
 import { useFetch } from '../hooks/useFetch'
 import { Link } from 'react-router-dom'
 
+/**
+ * Componente que muestra el historial de pedidos del usuario.
+ *  Utiliza el hook personalizado `useFetch` para obtener los datos de forma automática
+ *  al montar el componente. Implementa renderizado condicional para gestionar:
+ *  Estado de carga (Loading).
+ *  Mensajes de error del servidor.
+ *  Lista de pedidos vacía.
+ *  Listado de tarjetas de pedido con detalles de productos.
+ * * @component
+ * @returns {JSX.Element} La vista del historial de pedidos.
+ */
 const OrderList = () => {
     const {data: orders, loading, error} = useFetch('/pedidos/historial')
 

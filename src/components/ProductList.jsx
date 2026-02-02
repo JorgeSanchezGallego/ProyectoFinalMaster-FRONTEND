@@ -3,33 +3,44 @@ import { useFetch} from "../hooks/useFetch"
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { toast } from 'sonner'
-import { set } from 'react-hook-form'
 
+/**
+ * Componente principal para la visualización y gestión del catálogo de productos.
+ *  Funcionalidades principales:
+ *  Listado dinámico: Carga automática de productos mediante el hook `useFetch`.
+ *  Filtrado en tiempo real: Búsqueda reactiva por nombre o categoría sin peticiones adicionales a la API.
+ *  Autorización basada en Roles: 
+ *  "comercial": Puede crear, editar y eliminar productos.
+ *  "encargado": Puede añadir productos al carrito.
+ *  Gestión de persistencia: Manejo de borrado físico de productos con actualización de estado.
+ * * @component
+ * @returns {JSX.Element} Una rejilla (grid) de productos con herramientas de búsqueda y gestión.
+ */
 const ProductList = () => {
-    const {data: products, loading, error} = useFetch("/products")
-    const {addToCart} = useCart()
-    const [searchTerm, setSearchTerm] = useState("")
-    const navigate = useNavigate()
+    const {data: products, loading, error} = useFetch("/products") //Traemos todos los productos
+    const {addToCart} = useCart()//Extrae la funcion addtocart del contexto global para añadir productos
+    const [searchTerm, setSearchTerm] = useState("")//Estado para comprobar que el usuario escribe en el buscador
+    const navigate = useNavigate()//Redireccionar
 
-    const user = JSON.parse(localStorage.getItem("user"))
-    const isSupplier = user.role === "comercial"
+    const user = JSON.parse(localStorage.getItem("user"))//Recuperamos al user
+    const isSupplier = user.role === "comercial" //Devuelve booleano
     const isManager = user.role ==="encargado"
 
-    const handleDelete = async (id) => {
-        const token = localStorage.getItem("token")
-        const baseUrl = import.meta.env.VITE_BACKEND_URL
+    const handleDelete = async (id) => { //Funcion asincrona que necesita de un id para borrar
+        const token = localStorage.getItem("token") //Recuperamos el token para mas adelante
+        const baseUrl = import.meta.env.VITE_BACKEND_URL //Importamos la url basica
 
         try {
-            const response = await fetch(`${baseUrl}/products/${id}`, {
-                method: "DELETE",
+            const response = await fetch(`${baseUrl}/products/${id}`, {//Construimos el endpoint con el id
+                method: "DELETE",//Metodo delete
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`//Mostramos nuestro token 
                 }
             })
-            if (response.ok) {
+            if (response.ok) {//Mensaje de exito
                 toast.success("Producto eliminado")
                 setTimeout(() => window.location.reload(), 1500 )
-            } else {
+            } else { //Mensaje de error
                 toast.error("Error al borrar")
             }
         } catch (error) {
@@ -37,8 +48,8 @@ const ProductList = () => {
         }
     }
 
-    if (loading) return <p>Cargando productos</p>
-    if (error) {
+    if (loading) return <p>Cargando productos</p>//Mensaje de carga
+    if (error) {//Mensaje para el error
         return (
             <div className='error-container'>
                 <h3>Ha ocurrido un problema</h3>
@@ -50,12 +61,12 @@ const ProductList = () => {
         )
     }
 
-    const filteredProducts = products ? products.filter((product) => {
-        const term = searchTerm.toLowerCase()
+    const filteredProducts = products ? products.filter((product) => { //Si products existe, le hacemos un filter
+        const term = searchTerm.toLowerCase() //Pasamos a lowerCase el termino a buscar
         const name = product.nombre.toLowerCase()
         const category = product.categoria.toLowerCase()
-        return name.includes(term) || category.includes(term)
-    }) : []
+        return name.includes(term) || category.includes(term) //Si cualquiera es verdad, se queda en la lista
+    }) : [] //Si no hay productos, es array vacio
 
   return (
     <div className='product-list-container'>
@@ -67,7 +78,7 @@ const ProductList = () => {
             onChange={(e) => setSearchTerm(e.target.value)} className='search-input' />
     </div>
 
-    {isSupplier && (
+    {isSupplier && ( //Si el usuario es comercial lo muestra
         <div className='container-btn-create'>
         <button
             className='btn-create'
@@ -108,7 +119,7 @@ const ProductList = () => {
                         {isSupplier && (
                             <button
                                 className='delete-btn'
-                                onClick={() => handleDelete(product._id)}>
+                                onClick={() => handleDelete(product._id)}> {/*Le pasamos id con ._ por que viene de mongo */}
                                     Borrar producto
                             </button>
                         )}

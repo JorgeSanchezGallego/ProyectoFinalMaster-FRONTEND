@@ -11,14 +11,24 @@ import { ProductForm } from './components/ProductForm'
 import Footer from './components/Footer'
 import { Toaster } from 'sonner'
 
+/**
+ * Componente raíz de la aplicación.
+ * * Responsabilidades:
+ * - Configurar el enrutamiento global mediante `BrowserRouter`.
+ * - Definir la estructura base de la interfaz (NavBar, Contenido dinámico, Footer).
+ * - Centralizar el sistema de notificaciones `Toaster`.
+ * - Establecer el mapeo entre las URLs del navegador y los componentes/páginas.
+ * * @component
+ * @returns {JSX.Element} El esqueleto principal de la aplicación con todas sus rutas.
+ */
 function App() {
   
 
   return (
-    <BrowserRouter>
-      <Toaster position="top-center" richColors />
-      <NavBar/>
-      <Routes>
+    <BrowserRouter>{/*Envoltorio principal */}
+      <Toaster position="top-center" richColors />{/* Componente de notificaciones: 'richColors' habilita estilos por tipo (éxito/error) */}
+      <NavBar/> {/*Se coloca fuera de las routes para que este siempre visible */}
+      <Routes>{/*Definicion de las rutas */}
         <Route path='/' element={<Home/>} />
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
@@ -28,7 +38,7 @@ function App() {
         <Route path='/create-product' element={<ProductForm/>}/>
         <Route path='/edit-product/:id' element={<ProductForm/>}/>
       </Routes>
-      <Footer/>
+      <Footer/>{/*Se coloca fuera de las routes para que este siempre visible */}
     </BrowserRouter>
   )
 }

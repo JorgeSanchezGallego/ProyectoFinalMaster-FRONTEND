@@ -1,25 +1,36 @@
 import React, { useState } from 'react'
-import { set, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import {  useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
+/**
+ * Componente que gestiona el registro de nuevos usuarios en la plataforma.
+ *  Funcionalidades clave:
+ *  Utiliza `react-hook-form` para gestionar el estado del formulario y las validaciones.
+ *  Implementa validaciones en el cliente (Required, minLength, Regex para email).
+ *  Realiza una petición POST asíncrona al backend para crear el perfil de usuario.
+ *  Maneja respuestas de error tanto de validación como del servidor (usuarios duplicados).
+ *  Proporciona feedback visual mediante `sonner` y redirige al login tras el éxito.
+ * * @component
+ * @returns {JSX.Element} Formulario de registro con validación de datos.
+ */
 const Register = () => {
-    const { register, handleSubmit, formState: {errors}} = useForm()
+    const { register, handleSubmit, formState: {errors}} = useForm()//Register para conectar los inputs, handleSubmit middleware que valida que este correcto y ejecuta otra funcion, errors contiene los mensajes de validacion
 
-    const navigate = useNavigate()
-    const [serverError, setServerError] = useState(null)
+    const navigate = useNavigate()//Redireccion
+    const [serverError, setServerError] = useState(null)//Estado para errores del server
 
-    const onSubmit = async (data) => {
-        setServerError(null)
+    const onSubmit = async (data) => { //Funcion que le pasamos los datos del usuario
+        setServerError(null)//Limpiamos de posibles errores
         try {
-            const baseUrl = import.meta.env.VITE_BACKEND_URL
-            const response = await fetch(`${baseUrl}/users/register`, {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+            const baseUrl = import.meta.env.VITE_BACKEND_URL//Traemos la base de la url
+            const response = await fetch(`${baseUrl}/users/register`, {//Montamos url con el endpoint
+                method: 'POST',//Metodo post
+                headers: { "Content-Type": "application/json" },//Sera json
+                body: JSON.stringify(data)//Cadena de texto de JSON
             }) 
-            const json = await response.json()
-            if (!response.ok){
+            const json = await response.json()//Lo pasamos a objeto JS
+            if (!response.ok){//Manejo de errores
                 const message = typeof json === 'string' ? json : json.error || "Error al registrarse"
                 throw new Error(message)
             }
@@ -39,7 +50,7 @@ const Register = () => {
                 <label>Nombre</label>
                 <input 
                     type="text" 
-                    {...register("nombre", {
+                    {...register("nombre", {//Nos quedamos con todo register, pero en nombre lo actualizas y con estos requerimientos
                         required: "El nombre es obligatorio",
                         minLength: {value: 2, message: "Mínimo 2 caracteres"}
                     })} />

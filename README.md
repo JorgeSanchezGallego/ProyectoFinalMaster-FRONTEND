@@ -2,6 +2,7 @@
 # 🍽️ Proyecto Final Máster - Frontend
 
 Este repositorio contiene la aplicación **Frontend (SPA)** desarrollada con **React** y **Vite** para la gestión de pedidos de hostelería. Se conecta a la API del backend para permitir a los usuarios visualizar productos, gestionar su carrito y realizar pedidos según su rol.
+El backend está levantado con render FREE, al no usarse la api, el render duerme la api, hasta que un usuario interactua con ella, cuando realiza la primera interacción, tarda 1 minuto en levantarse.
 
 ## 🏫 Información del Proyecto
 
@@ -9,6 +10,7 @@ Este repositorio contiene la aplicación **Frontend (SPA)** desarrollada con **R
 * **Profesor:** Antonio Rosales
 * **Alumno:** Jorge Sánchez
 * **Tipo de Proyecto:** Frontend (React + Vite)
+* **Url:** [Enlace a la web](https://worder-student.vercel.app/)
 
 ---
 
