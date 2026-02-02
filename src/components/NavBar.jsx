@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useCart } from "../context/CartContext"
-import brandImg from '../assets/logo-transparent.png'
+import brandImg from '../assets/logo.png'
 import { toast } from "sonner"
 
 
@@ -14,6 +14,9 @@ const isLogged = !!user.email
         <nav className="navbar">
             <div className="navbar-brand">
                 <img src={brandImg} alt="Jorge Sánchez" className="img-navbar" />
+            </div>
+            <div className="app-name">
+                <p>Worder</p>
             </div>
             <div className="navbar-links">
                 {isLogged && (

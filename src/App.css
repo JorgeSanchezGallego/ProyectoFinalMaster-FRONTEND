@@ -33,7 +33,6 @@ body {
 
 #root {
   width: 100%;
-  max-width: 1280px;
   margin: 0 auto;
   padding: 0;
   display: flex;
@@ -94,6 +93,13 @@ button:active{
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.app-name p{
+  font-weight: bold;
+  font-size: 1.8rem;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 4px;
 }
 
 .img-navbar{
@@ -160,9 +166,8 @@ button:active{
   align-items: center;
   gap: 30px;
   overflow: hidden;
-  margin-top: 20px;
   border-radius: 12px;
-  min-height: 80vh;
+  height: 100vh;
 }
 
 .img-home{
