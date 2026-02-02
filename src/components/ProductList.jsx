@@ -59,7 +59,7 @@ const ProductList = () => {
 
   return (
     <div className='product-list-container'>
-    <div className='search container'>
+    <div className='search-container'>
         <input 
             type="text"
             placeholder='Busca por nombre o categoria'
@@ -68,11 +68,13 @@ const ProductList = () => {
     </div>
 
     {isSupplier && (
+        <div className='container-btn-create'>
         <button
             className='btn-create'
             onClick={() => navigate("/create-product")}>
                 Subir producto
             </button>
+        </div>
     )}
 
     {products && filteredProducts.length === 0 && (

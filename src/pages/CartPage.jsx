@@ -82,7 +82,7 @@ export const CartPage = () => {
                         {totalPrice.toFixed(2)} €
                     </div>
                     <button onClick={handleCheckout} className="btn-checkout" disabled={isBuying}>{isBuying ? "Procesando" : "Finalizar compra"}</button>
-                    <button onClick={() => {clearCart(); toast.success("Carrito vaciado")}}>Vaciar carrito</button>
+                    <button onClick={() => {clearCart(); toast.success("Carrito vaciado")}} className="btn-clean">Vaciar carrito</button>
                 </div>
 
             </div>

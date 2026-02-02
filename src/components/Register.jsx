@@ -58,6 +58,16 @@ const Register = () => {
                     {errors.email && <p className='error-text'>{errors.email.message}</p>}
             </div>
             <div className='form-group'>
+                <label >Role</label>
+                <select 
+                    {...register("role", {required: "Debes asignar un role"})}>
+                    <option value="encargado">Encargado</option>
+                    <option value="comercial">Comercial</option>
+                    <option value="trabajador">Trabajador</option>
+                </select>
+                    {errors.role && <p className='error-text'>{errors.role.message}</p>}
+            </div>
+            <div className='form-group'>
                 <label >Contraseña</label>
                 <input 
                     type="password" 
