@@ -21,8 +21,8 @@ const Login = () => {
             })
             const data = await response.json()
 
-            if (!response){
-                throw new Error(data.error)
+            if (!response.ok){
+                throw new Error(data || "Error al iniciar sesión")
             }
             localStorage.setItem("token", data.token)
             localStorage.setItem("user", JSON.stringify(data.user))
