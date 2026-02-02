@@ -27,7 +27,7 @@ const Login = () => {
             localStorage.setItem("token", data.token)
             localStorage.setItem("user", JSON.stringify(data.user))
             toast.success("Bienvenido de nuevo "+ data.user.nombre);
-            setTimeout(() => {window.location.href = "/products"}, 1500)
+            setTimeout(() => {navigate("/products")}, 1500)
             
         } catch (error) {
             setError(error.message)
